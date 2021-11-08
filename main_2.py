@@ -1,5 +1,6 @@
 import networkx as nx
 import matplotlib.pyplot as plt
+import networkx.algorithms.swap as swap
 import csv
 
 
@@ -45,16 +46,44 @@ def load_diseasome():
     return load_unweighted_from_edges_file(EDGES_PATH, 2)
 
 
+def mean_nn_degree(G):
+    degrees = {}
+    for v in G.nodes():
+        degree = 0
+        for e1, e2 in G.edges([v]):
+            degree += 1
+        degrees[v] = degree
+    degree_to_nn_degrees = [[] for _ in range(max(degrees.values())+1)]
+    for v in G.nodes():
+        nn_degrees = []
+        for e1, e2 in G.edges([v]):
+            if e1 != v:
+                print("Ehh")
+            nn_degrees.append(degrees[e2])
+        mean_nn_degree = sum(nn_degrees) / len(nn_degrees)
+        degree_to_nn_degrees[degrees[v]].append(mean_nn_degree)
+    degree_to_mean_nn_degrees = [sum(x) / len(x) for x in degree_to_nn_degrees[1:] if len(x) > 0]
+    plt.scatter(list(range(len(degree_to_mean_nn_degrees))), degree_to_mean_nn_degrees)
+    plt.ylabel("Mean degree of nearest neighbour")
+    plt.xlabel("Degree")
+    plt.show()
+
 if __name__ == '__main__':
-    G = load_westeros()
-    nx.write_gexf(G, "westeros.gexf")
-    G = load_brain_cat()
-    nx.write_gexf(G, "brain_cat.gexf")
-    G = load_openflights()
-    nx.write_gexf(G, "openflights.gexf")
-    # G = load_socfb()
-    # nx.write_gexf(G, "socfb.gexf")
+    # G = load_westeros()
+    # nx.write_gexf(G, "westeros.gexf")
+    # G = load_brain_cat()
+    # nx.write_gexf(G, "brain_cat.gexf")
+    # G = load_openflights()
+    # nx.write_gexf(G, "openflights.gexf")
+    # # G = load_socfb()
+    # # nx.write_gexf(G, "socfb.gexf")
+    # G = load_diseasome()
+    # nx.write_gexf(G, "diseasome.gexf")
+
     G = load_diseasome()
-    nx.write_gexf(G, "diseasome.gexf")
-    
+    mean_nn_degree(G)
+
+    while(True):
+        swap.double_edge_swap(G, nswap=len(G.edges())/10, max_tries=10000000)
+        mean_nn_degree(G)
 

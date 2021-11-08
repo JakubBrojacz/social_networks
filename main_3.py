@@ -171,8 +171,8 @@ def visualize(n, m):
     xs = np.random.uniform(low=0, high=1, size=num_nodes)
     ys = np.random.uniform(low=0, high=1, size=num_nodes)
     fig, ax = plt.subplots(1, 1)
-    spring_resting_length = 2
     dt = 0.01
+    electrostatic_strength = 10000
     for _ in range(1000):
         ax.clear()
         ax.scatter(x=xs, y=ys, c='b')
@@ -190,7 +190,7 @@ def visualize(n, m):
         diffsy /= (distances)
         diffsx = diffsx - np.diag(np.diag(diffsx))
         diffsy = diffsy - np.diag(np.diag(diffsy))
-        shift = dt * (1 / (distances*distances) - is_edge * (distances-spring_resting_length))
+        shift = dt * (electrostatic_strength / (distances*distances) - is_edge * (distances))
         xs += np.sum(diffsx * shift, axis=0)
         ys += np.sum(diffsy * shift, axis=0)
 
