@@ -160,6 +160,10 @@ def P5_5d(n=1000, p=0.05):
     plt.close()
 
 
+NUM_STEPS = 1000
+ELECTROSTATIC_STRENGTH = 1
+DT = 0.01
+
 def visualize(n, m):
     G = nx.generators.random_graphs.barabasi_albert_graph(n, m)
     num_nodes = G.number_of_nodes()
@@ -171,26 +175,18 @@ def visualize(n, m):
     xs = np.random.uniform(low=0, high=1, size=num_nodes)
     ys = np.random.uniform(low=0, high=1, size=num_nodes)
     fig, ax = plt.subplots(1, 1)
-    dt = 0.01
-    electrostatic_strength = 10000
-    for _ in range(1000):
+
+    for _ in range(NUM_STEPS):
         ax.clear()
         ax.scatter(x=xs, y=ys, c='b')
         for edge in edges:
-            linexs = [xs[edge[0]], xs[edge[1]]]
-            lineys = [ys[edge[0]], ys[edge[1]]]
-            ax.plot(linexs, lineys, color='k')
+            ax.plot([xs[edge[0]], xs[edge[1]]], [ys[edge[0]], ys[edge[1]]], color='k')
         plt.pause(0.001)
+
         diffsx = np.asarray([xs-x for x in xs])
         diffsy = np.asarray([ys-y for y in ys])
-        diffsx += np.eye(num_nodes)
-        diffsy += np.eye(num_nodes)
-        distances = np.sqrt(diffsx*diffsx+diffsy*diffsy)
-        diffsx /= (distances)
-        diffsy /= (distances)
-        diffsx = diffsx - np.diag(np.diag(diffsx))
-        diffsy = diffsy - np.diag(np.diag(diffsy))
-        shift = dt * (electrostatic_strength / (distances*distances) - is_edge * (distances))
+        distances = np.sqrt(diffsx*diffsx+diffsy*diffsy) + np.eye(num_nodes)
+        shift = DT * (ELECTROSTATIC_STRENGTH / (np.power(distances,3)) - is_edge)
         xs += np.sum(diffsx * shift, axis=0)
         ys += np.sum(diffsy * shift, axis=0)
 
@@ -208,4 +204,4 @@ if __name__ == '__main__':
     # P5_5b()
     # P5_5c()
     # P5_5d()
-    visualize(15, 14)
+    visualize(15, 12)
