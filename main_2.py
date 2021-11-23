@@ -82,8 +82,9 @@ if __name__ == '__main__':
 
     G = load_diseasome()
     mean_nn_degree(G)
+    print(f"Pearson correlation coeff: {nx.algorithms.assortativity.degree_pearson_correlation_coefficient(G)}")
 
     while(True):
         swap.double_edge_swap(G, nswap=len(G.edges())/10, max_tries=10000000)
         mean_nn_degree(G)
-
+        print(f"Pearson correlation coeff: {nx.algorithms.assortativity.degree_pearson_correlation_coefficient(G)}")

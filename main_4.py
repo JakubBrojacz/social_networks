@@ -72,7 +72,10 @@ def power_dist_analysis(x):
 
     plt.show()
 
+    X_MIN = 1
 
+    mle_estimator = x.shape[0] / (np.sum(np.log(x)) - np.log(X_MIN)) + 1
+    print(f"mle estimator alpha: {mle_estimator}")
 
 
 if __name__ == '__main__':
