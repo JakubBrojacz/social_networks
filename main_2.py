@@ -4,7 +4,6 @@ import networkx.algorithms.swap as swap
 import csv
 
 
-
 def load_westeros():
     EDGES_PATH = './westeros/data/asoiaf-book1-edges.csv'
     edges_file = open(EDGES_PATH, "r")
