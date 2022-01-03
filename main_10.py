@@ -115,10 +115,11 @@ if __name__ == '__main__':
     communities = get_best_partition(G, list(range(len(G.nodes))))
     if communities is None:
         communities = np.zeros(len(G.nodes))
-
+    unique_communities = np.unique(communities)
+    communities = [np.argwhere(unique_communities == c)[0][0] for c in communities]
 
     colors = {0: "red", 1: "blue", 2: "green", 3: "orange", 4: "grey", 5: "deeppink", 6: "black", 7: "yellow"}
-    color_map = [colors[c % 8] for c in communities]
+    color_map = [colors[c%8] for c in communities]
     pos = nx.spring_layout(G_original, seed=42)
     np.random.seed(42)
     nx.draw(G_original, node_color=color_map, pos=pos)
