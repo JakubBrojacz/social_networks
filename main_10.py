@@ -95,19 +95,19 @@ def get_best_partition(G, node_list):
         communities_0 = get_best_partition(G, community_0_node_list)
         if communities_0 is not None:
             for i in community_0_node_list:
-                communities[i] = static_variables.NUM_COMMUNITIES * communities_0[i]
-            static_variables.NUM_COMMUNITIES += 1
+                communities[i] = static_variables.NUM_COMMUNITIES + communities_0[i]
+            static_variables.NUM_COMMUNITIES += 2
         communities_1 = get_best_partition(G, community_1_node_list)
         if communities_1 is not None:
             for i in community_1_node_list:
-                communities[i] = max(1, static_variables.NUM_COMMUNITIES * communities_1[i])
-            static_variables.NUM_COMMUNITIES += 1
+                communities[i] = 1 + static_variables.NUM_COMMUNITIES + communities_1[i]
+            static_variables.NUM_COMMUNITIES += 3
 
     return communities
 
 if __name__ == '__main__':
     # G_original = nx.barbell_graph(20, 3)
-    G_original = generate_example_community_graph(400, 8, 40, 4)
+    G_original = generate_example_community_graph(200, 4, 40, 4)
     print(f"Number of nodes: {len(G_original.nodes)}")
     G = convert_node_labels_to_integers(G_original)
     np.random.seed(20)
